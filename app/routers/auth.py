@@ -43,7 +43,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=401,
         detail="Could not validate credentials",
@@ -62,7 +62,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     return user
 
 @router.post("/register", response_model=RegisterResponse)
-async def register(user: UserCreate):
+def register(user: UserCreate):
     if user.username in fake_users_db:
         raise HTTPException(status_code=400, detail="Username already registered")
     
@@ -72,7 +72,6 @@ async def register(user: UserCreate):
     user_dict["hashed_password"] = hashed_password
     fake_users_db[user.username] = user_dict
     
-    # 로깅 레벨을 DEBUG로 변경
     logger.debug(f"New user registered: {user.username}")
     
     return RegisterResponse(
@@ -81,7 +80,7 @@ async def register(user: UserCreate):
     )
 
 @router.post("/login", response_model=LoginResponse)
-async def login(form_data: LoginRequest):
+def login(form_data: LoginRequest):
     user = fake_users_db.get(form_data.username)
     if not user or not verify_password(form_data.password, user["hashed_password"]):
         raise HTTPException(
@@ -95,7 +94,6 @@ async def login(form_data: LoginRequest):
         data={"sub": form_data.username}, expires_delta=access_token_expires
     )
     
-    # 로깅 레벨을 DEBUG로 변경
     logger.debug(f"User logged in: {form_data.username}")
     
     return LoginResponse(access_token=access_token) 

@@ -62,8 +62,9 @@ class FastAPIUser(HttpUser):
     @task(3)
     def get_weather(self):
         # 랜덤 도시 목록
-        cities = ["서울", "부산", "인천", "대구", "대전", "광주", "울산", "세종", 
-                 "수원", "성남", "고양", "용인", "창원", "청주", "천안", "전주"]
+        cities = ["London", "New York", "Tokyo", "Paris", "Sydney", "Dubai", 
+                 "Singapore", "Hong Kong", "Rome", "Barcelona", "Amsterdam", 
+                 "Berlin", "Seoul", "Mumbai", "Cairo", "Toronto"]
         
         try:
             headers = {"Authorization": f"Bearer {self.token}"} if self.token else {}
