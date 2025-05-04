@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import auth
+from .routers import auth, weather
 
 app = FastAPI()
 
@@ -15,6 +15,7 @@ app.add_middleware(
 
 # 라우터 등록
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
+app.include_router(weather.router, prefix="/weather", tags=["weather"])
 
 @app.get("/")
 async def root():
