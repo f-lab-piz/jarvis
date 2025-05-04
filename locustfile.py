@@ -12,10 +12,10 @@ class FastAPIUser(HttpUser):
         self.username = None
 
     def generate_random_username(self):
-        return f"testuser{random.randint(1000, 9999)}"
+        return f"testuser{random.randint(1000, 999999)}"
 
     def register_and_login(self):
-        max_attempts = 3
+        max_attempts = 10
         for _ in range(max_attempts):
             try:
                 # 랜덤 사용자 생성

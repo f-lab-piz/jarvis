@@ -1,6 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from .routers import auth, weather
+import logging
+
+# 로깅 설정
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -12,6 +17,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    logger.debug(f"Received request: {request.method} {request.url}")
+    try:
+        response = await call_next(request)
+        logger.debug(f"Request completed: {request.method} {request.url} - Status: {response.status_code}")
+        return response
+    except Exception as e:
+        logger.error(f"Request failed: {request.method} {request.url} - Error: {str(e)}")
+        raise
 
 # 라우터 등록
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
