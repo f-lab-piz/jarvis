@@ -20,4 +20,11 @@ class LoginRequest(BaseModel):
 
 class LoginResponse(BaseModel):
     access_token: str
-    token_type: str = "bearer" 
+    token_type: str = "bearer"
+
+class WeatherResponse(BaseModel):
+    temperature: float
+    description: str
+    city: str
+    humidity: int
+    wind_speed: float 
